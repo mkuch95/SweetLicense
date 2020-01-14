@@ -55,6 +55,7 @@ public class ClientApp {
         licenseRequest.setAppVersion(CLIENT_APP_VERSION);
         licenseRequest.setDeviceFingerprint(MOTHERBOARD_SERIAL_NUMBER);
         licenseRequest.getAvailablePrinters().addAll(getConnectedPrinters());
+        licenseRequest.getTransportHeader().setEncryptionAlias("123");
 
         LicenseRequestSigner<LicenseRequest> licenseRequestSigner = new LicenseRequestSigner<>(LicenseRequest.class);
         try (InputStream is = new FileInputStream(new File(TRUSTEDSTORE_PATH))) {

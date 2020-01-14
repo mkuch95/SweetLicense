@@ -2,6 +2,7 @@ package info.kucharczyk.solutions.sweetlicense.core.signer;
 
 import info.kucharczyk.solutions.sweetlicense.core.encryptor.Encryptor;
 import info.kucharczyk.solutions.sweetlicense.core.encryptor.RsaAesEncryptor;
+import info.kucharczyk.solutions.sweetlicense.core.exception.EncryptorExtension;
 import info.kucharczyk.solutions.sweetlicense.core.io.ReadableHexInputStream;
 import info.kucharczyk.solutions.sweetlicense.core.io.ReadableHexOutputStream;
 import info.kucharczyk.solutions.sweetlicense.core.modelserializer.JsonModelSerializer;
@@ -20,7 +21,7 @@ public abstract class BaseSigner<T> {
         this.encryptor = new RsaAesEncryptor();
     }
 
-    protected T read(Key key, InputStream is) throws Exception {
+    protected T read(Key key, InputStream is) throws IOException, EncryptorExtension {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             try (InputStream ris = new ReadableHexInputStream(is)) {
                 encryptor.decrypt(key, ris, baos);
@@ -31,7 +32,7 @@ public abstract class BaseSigner<T> {
         }
     }
 
-    public void write(Key key, T model, OutputStream os) throws Exception {
+    public void write(Key key, T model, OutputStream os) throws IOException, EncryptorExtension {
         try (OutputStream ros = new ReadableHexOutputStream(os, pairsInLine)) {
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 modelSerializer.serialize(model, baos);
